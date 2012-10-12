@@ -1,10 +1,19 @@
 import serial
+import socket
 
-def readCOM(port, baudrate):
-    ser = serial.Serial(port,baudrate)
+def com2socket(com_name, baudrate, host, port,name):
+    com = serial.Serial(com_name,baudrate)
+
+    sock = socket.socket()
+    sock.connect((host,port))
     while 1:
-        line = ser.readline()
+        line = com.readline()
+        line = b'SEND '+name+line
         print(line)
+        sock.send(line)
+
+    sock.close
+    com.close()
 
 if __name__ == '__main__':
-    readCOM("COM12",57600)
+    com2socket("COM3",57600, socket.gethostname(),26123,b'Arduino1')

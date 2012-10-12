@@ -15,13 +15,15 @@ void setup()
 void loop()
 {
   photoVal = analogRead(photoPin); //read photoresistor voltage
-  Serial.print("photo = " );                       
-  Serial.println(photoVal); 
+  Serial.print(";PhotoSensor;" );                       
+  Serial.print(photoVal);
+  Serial.println(";");
   
   tempVal= analogRead(tempPin)*5/1024.0;
   tempVal= (tempVal - 0.5) / 0.01;
-  Serial.print("temp = " );                       
-  Serial.println(tempVal); 
+  Serial.print(";Temperature;" );                       
+  Serial.print(tempVal); 
+  Serial.println(";");
   
   delay(delayTime);
 }
