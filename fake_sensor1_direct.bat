@@ -1,0 +1,1 @@
+python fake_sensor.py COM11 57600 192.12.8.6 26123 Fakeduino1

@@ -5,16 +5,16 @@
     <color name="shadow">#C8C8C8</color>
     <color name="red">#FF0000</color>
     <color name="green">#00FF00</color>
-    <color name="darkText">#222222</color>
+    <color name="darkText">#8b4513</color>
     <color name="greyText">#575757</color>
-    <color name="titleStartColor">#FAFAFA</color>
-	<color name="titleEndColor">#D3D3D3</color>
-	<color name="headerStartColor">#E0E3E6</color>
-	<color name="headerEndColor">#A7B0B7</color>
+    <color name="titleStartColor">#F5DEB3</color>
+	<color name="titleEndColor">#F4A460</color>
+	<color name="headerStartColor">#deb887</color>
+	<color name="headerEndColor">#cd853f</color>
 	<color name="listStartColor">#F8F8F8</color>
 	<color name="listEndColor">#EAEAEA</color>
-	<color name="bottomCenterColor">#F5F5F5</color>
-	<color name="bottomBoundColor">#C8C8C8</color>
-    <color name="headerText">#174858</color>
+	<color name="bottomCenterColor">#F5DEB3</color>
+	<color name="bottomBoundColor">#F4A460</color>
+    <color name="headerText">#a0522d</color>
     <color name="divider">#E0E0DF</color>
 </resources>

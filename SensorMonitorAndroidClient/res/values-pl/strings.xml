@@ -1,0 +1,14 @@
+<resources>
+
+    <string name="app_name">SensorMonitor</string>
+    <string name="title_activity_sensor_monitor">SensorMonitor</string>
+    <string name="menu_settings">Ustawienia</string>
+    
+    <string name="title">SENSOR MONITOR</string>
+    <string name="header_measurements">Dostępne pomiary</string>
+    <string name="empty_measurements">Brak pomiarów</string>
+    
+    <string name="get_measurements">Pobierz pomiary</string>
+
+  
+</resources>

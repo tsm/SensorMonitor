@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/title_height"
             android:gravity="center"
-            android:textColor="@color/greyText"
+            android:textColor="@color/darkText"
             android:textSize="@dimen/title_text"
             android:background="@drawable/title_gradient"
             android:text="@string/title" />
@@ -63,7 +63,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:clickable="true"
-            android:onClick="userConfiguration"
+            android:onClick="get_measurements"
             android:gravity="center"
             android:text="@string/get_measurements"
             android:textColor="@color/darkText"

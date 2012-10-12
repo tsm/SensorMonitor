@@ -1,20 +1,72 @@
 package com.tomszom.sensormonitor;
 
-import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
 
-public class SensorMonitor extends Activity {
+import android.app.Application;
+import android.util.Log;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sensor_monitor);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_sensor_monitor, menu);
-        return true;
-    }
+public class SensorMonitor extends Application {
+	private final String TAG = getClass().getName();
+	private HttpClient httpClient;
+	
+	@Override
+	public void onCreate()
+	{
+		super.onCreate();
+		
+		httpClient = createHttpClient();
+	}
+	
+	@Override
+	public void onLowMemory()
+	{
+		super.onLowMemory();
+		shutdownHttpClient();
+	}
+	
+	@Override
+	public void onTerminate()
+	{
+		super.onTerminate();
+		shutdownHttpClient();
+	}
+	
+	private HttpClient createHttpClient()
+	{
+		Log.d(TAG,"createHttpClient()...");
+		HttpParams params = new BasicHttpParams();
+		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		HttpProtocolParams.setContentCharset(params, HTTP.DEFAULT_CONTENT_CHARSET);
+		HttpProtocolParams.setUseExpectContinue(params, true);
+		SchemeRegistry schReg = new SchemeRegistry();
+		schReg.register(new Scheme("http",PlainSocketFactory.getSocketFactory(), 80));
+		schReg.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+		ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
+		
+		return new DefaultHttpClient(conMgr, params);
+	}
+	
+	public HttpClient getHttpClient(){
+		return httpClient;
+	}
+	
+	private void shutdownHttpClient()
+	{
+		if(httpClient!=null && httpClient.getConnectionManager()!=null)
+		{
+			httpClient.getConnectionManager().shutdown();
+		}
+	}
 }
