@@ -1,0 +1,1 @@
+python sensor.py COM12 57600 127.0.0.1 26123 Arduino2

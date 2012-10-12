@@ -1,0 +1,24 @@
+<resources>
+
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">8dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+    
+    <dimen name="title_height">85dp</dimen>
+    <dimen name="title_text">23dp</dimen>
+    <dimen name="header_height">30dp</dimen>
+	<dimen name="header_text">16dp</dimen>
+	<dimen name="bottom_button_text">16dp</dimen>
+	<dimen name="bottom_button_height">80dp</dimen>
+	
+	<dimen name="event_tv_height">110px</dimen>
+	<dimen name="event_text">18dp</dimen>
+	<dimen name="cal_width">100px</dimen>
+	<dimen name="cal_height">82px</dimen>
+	<dimen name="month_text">12px</dimen>
+	<dimen name="month_tv_height">25px</dimen>
+	<dimen name="month_tv_padding_top">6px</dimen>
+	<dimen name="day_tv_height">50px</dimen>
+	<dimen name="day_text">30px</dimen>
+    
+</resources>

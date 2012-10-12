@@ -3,18 +3,26 @@
 import serial
 import socket
 import sys
+import random
+from time import sleep
 
 def com2socket(com_name, baudrate, host, port,name):
-    com = serial.Serial(com_name,baudrate)
+    #com = serial.Serial(com_name,baudrate)
 
     sock = socket.socket()
     sock.connect((host,int(port)))
     while 1:
-        line = com.readline()
-        line = b'SEND '+bytes(name, encoding='ascii')+line
+        #line = com.readline()
+        line = b'SEND '+bytes(name, encoding='ascii')+b';PhotoSensor;'+bytes(str(random.randint(100,700)), encoding='ascii')+b';\r\n'
         print(line)
         sock.send(line)
+        sleep(0.01)
+        line = b'SEND '+bytes(name, encoding='ascii')+b';Temperature;'+bytes(str(random.randint(180,360)/10.0), encoding='ascii')+b';\r\n'
+        print(line)
+        sock.send(line)
+        sleep(0.8)
 
+        
     sock.close
     com.close()
 

@@ -1,14 +1,73 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:clickable="true"
+    android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world"
-        tools:context=".SensorMonitor" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1.0"
+        android:layout_gravity="center_vertical|center"
+        android:background="@color/white"
+        android:gravity="center_vertical|center"
+        android:orientation="vertical" >
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:gravity="center"
+            android:textColor="@color/greyText"
+            android:textSize="@dimen/title_text"
+            android:background="@drawable/title_gradient"
+            android:text="@string/title" />
+
+        <TextView
+            android:id="@+id/tv_header"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:textColor="@color/headerText"
+            android:textSize="@dimen/header_text"
+            android:background="@drawable/header_gradient"
+            android:text="@string/header_measurements" />
+
+        <ListView
+            android:id="@+id/android:list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@color/shadow"
+            android:background="@color/listStartColor"
+            android:divider="@color/divider"
+	        android:dividerHeight="1dp" >
+        </ListView>
+        <TextView
+	        android:id="@+id/android:empty"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:gravity="center"
+	        android:textColor="@color/darkText"
+	        android:text="@string/empty_measurements" />
+        
+    </LinearLayout>
+    <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="@dimen/bottom_button_height"
+       android:background="@drawable/bottom_gradient" >
+
+        <TextView
+            android:id="@+id/tv_buttA"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:onClick="userConfiguration"
+            android:gravity="center"
+            android:text="@string/get_measurements"
+            android:textColor="@color/darkText"
+            android:textSize="@dimen/bottom_button_text" />
+    </LinearLayout>
+
+</LinearLayout>
