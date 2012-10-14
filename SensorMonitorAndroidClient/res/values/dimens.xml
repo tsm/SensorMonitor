@@ -12,6 +12,6 @@
 	<dimen name="bottom_button_height">80dp</dimen>
     
 	<dimen name="measurement_tv_height">110px</dimen>
-	<dimen name="measurement_text">18dp</dimen>
+	<dimen name="measurement_text">14dp</dimen>
 	
 </resources>

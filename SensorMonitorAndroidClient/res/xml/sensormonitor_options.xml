@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="journeydiary_option_preference"
+    android:summary="@string/prefSummary"
+    android:title="@string/prefTitle" >
+
+    <PreferenceCategory
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:key="connection_category"
+        android:summary="@string/con_cat_summary"
+        android:title="@string/con_cat" >
+        <EditTextPreference
+            android:dialogTitle="@string/serverAddressDialog"
+            android:key="@string/serverAddressOption"
+            android:summary="@string/serverAddressSummary"
+            android:title="@string/serverAddressTitle" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

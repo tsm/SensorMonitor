@@ -18,7 +18,7 @@ def com2socket(com_name, baudrate, host, port,name):
         line = b'SEND '+bytes(name, encoding='ascii')+b';Temperature;'+bytes(str(random.randint(180,360)/10.0), encoding='ascii')+b';\r\n'
         print(line)
         sock.send(line)
-        sleep(0.8)
+        sleep(2)
 
         
     sock.close

@@ -10,5 +10,12 @@
     
     <string name="get_measurements">Get measurements</string>
 
-  
+  	<string name="prefTitle">Preferences</string>
+    <string name="prefSummary"></string>
+    <string name="con_cat">Connections</string>
+    <string name="con_cat_summary"></string>
+    <string name="serverAddressTitle">Server Address</string>
+    <string name="serverAddressSummary"></string>
+    <string name="serverAddressOption">server_address_option</string>
+    <string name="serverAddressDialog">Wprowadź URL</string>
 </resources>
