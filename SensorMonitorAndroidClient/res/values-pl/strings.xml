@@ -10,5 +10,12 @@
     
     <string name="get_measurements">Pobierz pomiary</string>
 
-  
+    <string name="prefTitle">Preferencje</string>
+    <string name="prefSummary">Pozwala ustawić preferencje dotyczące działania aplikacji, np login. </string>
+    <string name="con_cat">Połączenie</string>
+    <string name="con_cat_summary">Ustawienia połączeń</string>
+    <string name="serverAddressTitle">Adres serwera</string>
+    <string name="serverAddressSummary">Niezbędny do nawiązania połączenia</string>
+    <string name="serverAddressOption">server_address_option</string>
+    <string name="serverAddressDialog">Wprowadź URL</string>
 </resources>

@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -28,6 +27,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Handler.Callback;
 import android.preference.PreferenceManager;
+import android.R.integer;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +36,9 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -165,21 +168,43 @@ public class SensorMonitorActivity extends ListActivity {
     	//refreshList();
     }
     
+	/**
+	 * Tworzenie menu
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.activity_sensor_monitor, menu);
+		return true;
+	}
+
+	/**
+	 * Akcja po przyciœniêciu elementu z menu
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_settings:
+			startActivity(new Intent(this,
+					SensorMonitorPreferencesActivity.class));
+			break;
+		}
+		return true;
+	}
+    
     public void refreshList(){
         measurementArrayList= new ArrayList<Measurement>();
         List<NameValuePair> pair = new ArrayList<NameValuePair>();
         pair.add(new BasicNameValuePair("action", "get_subscriptions"));
-        //String respond = sendPost(pair); //tu coœ kurcze sypie b³êdami
-//        StringTokenizer st = new StringTokenizer(respond); // tutaj przyda³oby siê rozwaliæ odpowiedŸ zamiast rêcznie
-//		if (st.hasMoreTokens()) {
-//			if (st.nextToken().equalsIgnoreCase("ok")) {
-//				if (st.hasMoreTokens()) {
-//					return Long.parseLong(st.nextToken());
-//				}
-//			}
-//		}
+        String respond = sendPost(pair);
 
-        measurementArrayList.add(new Measurement("Fakedruino1","Temperature","")); //Reczne dodanie do listy
+        if(respond.equals("")) return; // nic nie dosta³ nic nie robi
+        //TODO: parsowanie listy
+        String[] splitted = respond.split(";");
+        for(int i=0;i<splitted.length-1;i+=2){
+        	measurementArrayList.add(new Measurement(splitted[i],splitted[i+1],""));
+        }
+        //measurementArrayList.add(new Measurement("Fakedruino1","Temperature","")); //Reczne dodanie do listy
 
         setListAdapter(new MeasurementAdapter(this, R.layout.date_row, measurementArrayList));
         lv = getListView();
@@ -204,15 +229,23 @@ public class SensorMonitorActivity extends ListActivity {
 	}
     
 	public String sendPost(List<NameValuePair> pairs) {
-//		SharedPreferences prefs = PreferenceManager
-//				.getDefaultSharedPreferences(getBaseContext()); 
-//																	
-//		String serverAddress = prefs
-//				.getString(
-//						this.getResources().getString(
-//								R.string.serverAddressOption), "");
+		String textResult = "";
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext()); 
+																	
+		String serverAddress = prefs
+				.getString(
+						this.getResources().getString(
+								R.string.serverAddressOption), "");
+		if(serverAddress.equals("")){
+			Log.d(TAG, "Empty address, launch Preferneces...");
+	    	Intent intent = new Intent().setClass(this,
+					SensorMonitorPreferencesActivity.class);
+			this.startActivityForResult(intent, 0);
+			return "";
+		}
 		//String serverAddress = "192.12.8.100";
-		String serverAddress = "http://tomszom.com/";
+		serverAddress+="/subscriptions";
 		SensorMonitor app = (SensorMonitor) this.getApplication();
 		HttpClient client = app.getHttpClient();
 		HttpPost post = new HttpPost(serverAddress);
@@ -220,7 +253,7 @@ public class SensorMonitorActivity extends ListActivity {
 		BufferedReader in = null;
 
 
-		String textResult = "";
+		
 		
 		try {
 			post.setEntity(new UrlEncodedFormEntity(pairs, "UTF-8"));
