@@ -112,20 +112,18 @@ public class Monitor implements Runnable {
 							readBuffer.flip();
 							String message = new String(readBuffer.array(),
 									readBuffer.position(),
-									readBuffer.remaining());
-							if (message.toLowerCase().startsWith("send")) {
+									readBuffer.remaining()).toLowerCase();
+							if (message.startsWith("send")) {
 								// Otrzymywanie metryki
 								saveMetricsValue(client, message);
-							} else if (message.toLowerCase()
-									.startsWith("start")) {
+							} else if (message.startsWith("start")) {
 								// Obs³uga rozpoczêcia subskrypcji
 								subscribeFor(client, message);
-							} else if (message.toLowerCase().startsWith(
-									"delete")) {
+							} else if (message.startsWith("delete")) {
 								// Obs³uga koñczenia subskrypcji
 								unsubscribeFor(client, message);
-							} else if (message.toLowerCase().startsWith("stop")
-									|| message.toLowerCase().startsWith("quit")) {
+							} else if (message.startsWith("stop")
+									|| message.startsWith("quit")) {
 								// Roz³¹czanie klienta
 								disconnectClient(key, client);
 							} else {
