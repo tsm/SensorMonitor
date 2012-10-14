@@ -1,4 +1,4 @@
-package sensorMonitor.servlets;
+package monitor.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import sensorMonitor.monitor.Console;
-import sensorMonitor.monitor.Metrics;
-import sensorMonitor.monitor.Monitor;
+import monitor.core.Console;
+import monitor.core.Metrics;
+import monitor.core.Monitor;
 
 @WebServlet("/subscriptions")
 public class Subscriptions extends HttpServlet {
@@ -61,6 +61,8 @@ public class Subscriptions extends HttpServlet {
 						sb.append(monitor.unsubscribeFor(client, supply + ";"
 								+ metrics + ";"));
 					}
+				} else {
+					sb.append("Podany klient nie istnieje");
 				}
 			}
 		}

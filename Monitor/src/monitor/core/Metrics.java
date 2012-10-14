@@ -1,4 +1,4 @@
-package sensorMonitor.monitor;
+package monitor.core;
 
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;

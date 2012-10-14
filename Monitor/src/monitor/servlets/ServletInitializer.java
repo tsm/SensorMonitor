@@ -1,4 +1,4 @@
-package sensorMonitor.servlets;
+package monitor.servlets;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import sensorMonitor.monitor.Console;
+import monitor.core.Console;
 
 public class ServletInitializer extends HttpServlet {
 

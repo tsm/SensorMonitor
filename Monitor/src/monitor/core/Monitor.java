@@ -1,4 +1,4 @@
-package sensorMonitor.monitor;
+package monitor.core;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
