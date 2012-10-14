@@ -14,6 +14,7 @@ public class Console extends JFrame {
 	private JScrollPane jScrollPane = new JScrollPane();
 	private JTextArea console = new JTextArea();
 	private int listen_port = 26123;
+	private String serverAdress = "localhost";
 	private static Monitor monitor = null;
 
 	public JTextArea getConsole() {
@@ -30,8 +31,13 @@ public class Console extends JFrame {
 
 	/**
 	 * Konstruktor
+	 * 
+	 * @param port
+	 * @param address
 	 */
-	public Console() {
+	public Console(String address, int port) {
+		this.listen_port = port;
+		this.serverAdress = address;
 		init();
 	}
 
@@ -54,7 +60,7 @@ public class Console extends JFrame {
 		jPanel.add(jScrollPane);
 		this.getContentPane().add(jPanel, BorderLayout.WEST);
 
-		setMonitor(new Monitor(listen_port, this));
+		setMonitor(new Monitor(serverAdress, listen_port, this));
 		new Thread(monitor).start();
 	}
 

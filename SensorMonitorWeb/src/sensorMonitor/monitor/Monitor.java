@@ -23,6 +23,7 @@ public class Monitor implements Runnable {
 	}
 
 	private int port;
+	private String serverAdress;
 	private int monitorId;
 	private Console targetConsole;
 	private static Map<String, Metrics> metrics = new HashMap<String, Metrics>();
@@ -36,9 +37,10 @@ public class Monitor implements Runnable {
 
 	private static int monitorNum = 0;
 
-	public Monitor(int port, Console target) {
+	public Monitor(String serverAdress, int port, Console target) {
 		monitorNum++;
 		this.port = port;
+		this.serverAdress = serverAdress;
 		this.targetConsole = target;
 		DefaultCaret caret = (DefaultCaret) targetConsole.getConsole()
 				.getCaret();
@@ -72,13 +74,13 @@ public class Monitor implements Runnable {
 	 */
 	@Override
 	public void run() {
-		sendMsg("Gotowy, Oczekujê na po³¹czenia...");
+		sendMsg("Monitor uruchomiony! (" + serverAdress + ":" + port + ")");
 		try {
 			// Stworzenie i konfiguracja selektora
 			Selector selector = Selector.open();
 			ServerSocketChannel server = ServerSocketChannel.open();
 			server.configureBlocking(false);
-			server.socket().bind(new InetSocketAddress(port));
+			server.socket().bind(new InetSocketAddress(serverAdress, port));
 			server.register(selector, SelectionKey.OP_ACCEPT);
 
 			// Cykl zycia monitora
