@@ -3,6 +3,7 @@ package com.tomszom.sensormonitor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
@@ -50,6 +51,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class SensorMonitorActivity extends ListActivity {
 	private final String TAG = getClass().getName();
+	private final int PORT = 26123;
 	private ListView lv;
 	private boolean openport=false;
 	public static ArrayList<Measurement> measurementArrayList; // TODO make singleton?
@@ -88,11 +90,11 @@ public class SensorMonitorActivity extends ListActivity {
 				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				v = vi.inflate(R.layout.date_row, null);
 			}
-			String device = items.get(position).getDevice();
-			if (device != null) {
-				TextView tv_device = (TextView) v.findViewById(R.id.tv_device);
-				if (tv_device != null) {
-					tv_device.setText(device);
+			String stock = items.get(position).getStock();
+			if (stock != null) {
+				TextView tv_stock = (TextView) v.findViewById(R.id.tv_stock);
+				if (tv_stock != null) {
+					tv_stock.setText(stock);
 				}
 				TextView tv_measurement = (TextView) v.findViewById(R.id.tv_measurement);
 				TextView tv_value = (TextView) v.findViewById(R.id.tv_value);
@@ -118,29 +120,62 @@ public class SensorMonitorActivity extends ListActivity {
     }
     
     public void openPort(){
+    	SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext()); 
+																	
+		final String serverAddress = prefs
+				.getString(
+						this.getResources().getString(
+								R.string.serverAddressOption), "");
+		if(serverAddress.equals("")){
+			Log.d(TAG, "Empty address, launch Preferneces...");
+	    	Intent intent = new Intent().setClass(this,
+					SensorMonitorPreferencesActivity.class);
+			this.startActivityForResult(intent, 0);
+			return;
+		}
+		final String clientName = prefs
+				.getString(
+						this.getResources().getString(
+								R.string.clientOption), "");
+		if(clientName.equals("")){
+			Log.d(TAG, "Empty client name, launch Preferneces...");
+	    	Intent intent = new Intent().setClass(this,
+					SensorMonitorPreferencesActivity.class);
+			this.startActivityForResult(intent, 0);
+			return;
+		}
     	if(!openport){
     		openport=true;
 	    	new Thread(new Runnable() {
 				  public void run() {
-			    		ServerSocket ss;
 			    		Socket s;
 			    		Boolean end = false;
 			    		try {						  
-				            ss = new ServerSocket(26123);
-				            //Server is waiting for client here, if needed
-		                    s = ss.accept();
+			    			    s = new Socket(serverAddress,PORT);
+			    		        //outgoing stream redirect to socket
+			    		        OutputStream out = s.getOutputStream();
+			    		        PrintWriter output = new PrintWriter(out);
+			    		        output.println("CONNECT "+clientName);
 				            while(!end){
 				                    
 				                    BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
-				                    PrintWriter output = new PrintWriter(s.getOutputStream(),true); //Autoflush
+				                    //PrintWriter output = new PrintWriter(s.getOutputStream(),true); //Autoflush
 				                    String st = input.readLine();
-				                    Log.d(TAG, "Received: "+st);
+				                    Log.d(TAG, "Received from monitor: "+st);
 				                    // tu jakieœ przetwarzanie danych
+				                    String[] splitted = st.split(";");
+				                    for(int i=0;i<measurementArrayList.size();i++)
+				                    {
+				                    	if (measurementArrayList.get(i).getStock().equals(splitted[0])&&
+				                    		measurementArrayList.get(i).getMeasurement().equals(splitted[1])){
+				                    		measurementArrayList.get(i).setValue(splitted[2]);
+				                    	}
+				                    }
 				                    if ( 1==2 ){ end = true; } // STOPPING conditions
 	
 				            }
-				            s.close();
-				            ss.close();  
+				            s.close();  
 						  } catch (UnknownHostException e) {
 				            // TODO Auto-generated catch block
 				            //e.printStackTrace();
@@ -195,16 +230,14 @@ public class SensorMonitorActivity extends ListActivity {
     public void refreshList(){
         measurementArrayList= new ArrayList<Measurement>();
         List<NameValuePair> pair = new ArrayList<NameValuePair>();
-        pair.add(new BasicNameValuePair("action", "get_subscriptions"));
         String respond = sendPost(pair);
 
         if(respond.equals("")) return; // nic nie dosta³ nic nie robi
-        //TODO: parsowanie listy
+        //parsowanie listy:
         String[] splitted = respond.split(";");
         for(int i=0;i<splitted.length-1;i+=2){
         	measurementArrayList.add(new Measurement(splitted[i],splitted[i+1],""));
         }
-        //measurementArrayList.add(new Measurement("Fakedruino1","Temperature","")); //Reczne dodanie do listy
 
         setListAdapter(new MeasurementAdapter(this, R.layout.date_row, measurementArrayList));
         lv = getListView();
@@ -215,17 +248,29 @@ public class SensorMonitorActivity extends ListActivity {
           public void onItemClick(AdapterView<?> parent, View view,
               int position, long id) {
             Log.i(TAG, "Kliknieto "+position+" id:"+id);
-            openPort();
+            if(measurementArrayList.get(position).isSubscribing()){
+            	List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+	            pairs.add(new BasicNameValuePair("action", "cancel"));
+	            pairs.add(new BasicNameValuePair("stock", measurementArrayList.get(position).getStock()));
+	            pairs.add(new BasicNameValuePair("metrics", measurementArrayList.get(position).getMeasurement()));
+	            sendPost(pairs);
+	            measurementArrayList.get(position).setSubscribing(false);
+            }
+            else{
+	            List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+	            pairs.add(new BasicNameValuePair("action", "subscribe"));
+	            pairs.add(new BasicNameValuePair("stock", measurementArrayList.get(position).getStock()));
+	            pairs.add(new BasicNameValuePair("metrics", measurementArrayList.get(position).getMeasurement()));
+	            sendPost(pairs);  
+	            measurementArrayList.get(position).setSubscribing(true);
+            }
           }
         });
     }
     
     public void get_measurements(View target) {
-//    	Log.d(TAG, "Launch User Configuration...");
-//    	Intent intent = new Intent().setClass(this,
-//				UserConfigurationActivity.class);
-//		this.startActivityForResult(intent, 0);
-    	refreshList();
+    	openPort(); //otwieram po³aczenie
+    	if(openport) refreshList(); //jesli po³aczony ¿adam listy subskrypcji
 	}
     
 	public String sendPost(List<NameValuePair> pairs) {
@@ -243,6 +288,20 @@ public class SensorMonitorActivity extends ListActivity {
 					SensorMonitorPreferencesActivity.class);
 			this.startActivityForResult(intent, 0);
 			return "";
+		}
+		String clientName = prefs
+				.getString(
+						this.getResources().getString(
+								R.string.clientOption), "");
+		if(clientName.equals("")){
+			Log.d(TAG, "Empty client name, launch Preferneces...");
+	    	Intent intent = new Intent().setClass(this,
+					SensorMonitorPreferencesActivity.class);
+			this.startActivityForResult(intent, 0);
+			return "";
+		}
+		else {
+			pairs.add(new BasicNameValuePair("client", clientName));
 		}
 		//String serverAddress = "192.12.8.100";
 		serverAddress+="/subscriptions";
@@ -287,14 +346,6 @@ public class SensorMonitorActivity extends ListActivity {
 		
 		return textResult;
 	}
-    
-    public void configuration(View target) {
-    	//Log.d(TAG, "Launch Car Configuration...");
-    	//Intent intent = new Intent().setClass(this,
-		//		configurationActivity.class);
-		//this.startActivityForResult(intent, 0);
-	}
-    
 
     @Override
     public void onAttachedToWindow() {

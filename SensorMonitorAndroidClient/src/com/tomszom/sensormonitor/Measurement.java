@@ -1,23 +1,21 @@
 package com.tomszom.sensormonitor;
 
-import android.R.bool;
-
 public class Measurement {
-	private String device;
+	private String stock;
 	private String measurement;
 	private String value;
 	private boolean isSubscribing=false;
-	public Measurement(String device, String measurement, String value) {
+	public Measurement(String stock, String measurement, String value) {
 		super();
-		this.device = device;
+		this.stock = stock;
 		this.measurement = measurement;
 		this.value = value;
 	}
-	public String getDevice() {
-		return device;
+	public String getStock() {
+		return stock;
 	}
-	public void setDevice(String device) {
-		this.device = device;
+	public void setStock(String stock) {
+		this.stock = stock;
 	}
 	public String getMeasurement() {
 		return measurement;
@@ -31,5 +29,12 @@ public class Measurement {
 	public void setValue(String value) {
 		this.value = value;
 	}
+	public boolean isSubscribing() {
+		return isSubscribing;
+	}
+	public void setSubscribing(boolean isSubscribing) {
+		this.isSubscribing = isSubscribing;
+	}
+	
 	
 }

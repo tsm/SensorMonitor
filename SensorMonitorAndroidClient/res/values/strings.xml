@@ -17,5 +17,9 @@
     <string name="serverAddressTitle">Server Address</string>
     <string name="serverAddressSummary"></string>
     <string name="serverAddressOption">server_address_option</string>
-    <string name="serverAddressDialog">Wprowadź URL</string>
+    <string name="serverAddressDialog">Enter URL</string>
+    <string name="clientTitle">Client name</string>
+    <string name="clientSummary">Unique client name</string>
+    <string name="clientOption">client_option</string>
+    <string name="clientDialog">Type client name</string>
 </resources>

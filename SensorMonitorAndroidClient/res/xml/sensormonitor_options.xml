@@ -14,6 +14,11 @@
             android:key="@string/serverAddressOption"
             android:summary="@string/serverAddressSummary"
             android:title="@string/serverAddressTitle" />
+        <EditTextPreference
+            android:dialogTitle="@string/clientDialog"
+            android:key="@string/clientOption"
+            android:summary="@string/clientSummary"
+            android:title="@string/clientTitle" />
     </PreferenceCategory>
 
 </PreferenceScreen>
