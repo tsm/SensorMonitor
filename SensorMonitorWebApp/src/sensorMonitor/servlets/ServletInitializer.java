@@ -18,7 +18,7 @@ public class ServletInitializer extends HttpServlet {
 
 		try {
 			InetAddress address = InetAddress.getLocalHost();
-			System.out.println(address.getHostAddress());
+			System.out.println("Adres serwera: " + address.getHostAddress());
 			// uruchomienie konsoli
 			Console console = new Console(address.getHostAddress(), port);
 			console.setVisible(true);
