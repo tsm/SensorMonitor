@@ -1,4 +1,4 @@
-package com.task1;
+package sensorMonitor.monitor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,10 +10,23 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class Console extends JFrame {
-	JPanel jPanel = new JPanel();
-	JScrollPane jScrollPane = new JScrollPane();
-	JTextArea console = new JTextArea();
-	static int[] listen_ports = { 26123 /* , 80 */};
+	private JPanel jPanel = new JPanel();
+	private JScrollPane jScrollPane = new JScrollPane();
+	private JTextArea console = new JTextArea();
+	private int listen_port = 26123;
+	private static Monitor monitor = null;
+
+	public JTextArea getConsole() {
+		return console;
+	}
+
+	public static Monitor getMonitor() {
+		return monitor;
+	}
+
+	public static void setMonitor(Monitor monitor) {
+		Console.monitor = monitor;
+	}
 
 	/**
 	 * Konstruktor
@@ -41,10 +54,8 @@ public class Console extends JFrame {
 		jPanel.add(jScrollPane);
 		this.getContentPane().add(jPanel, BorderLayout.WEST);
 
-		for (int i = 0; i < listen_ports.length; i++) {
-			Monitor monitor = new Monitor(listen_ports[i], this);
-			new Thread(monitor).start();
-		}
+		setMonitor(new Monitor(listen_port, this));
+		new Thread(monitor).start();
 	}
 
 	/**
@@ -56,10 +67,4 @@ public class Console extends JFrame {
 	public void writeToConsole(String text) {
 		console.append(text);
 	}
-
-	// public static void main(String[] args) {
-	// // uruchomienie Serwera
-	// Console webserver = new Console();
-	// webserver.setVisible(true);
-	// }
 }
