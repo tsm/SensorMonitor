@@ -4,7 +4,7 @@ int tempPin = 1;  // temperature pin
 int photoVal = 0; // photoresistor voltage
 float tempVal;    // temperature value
 
-int delayTime = 90; // dalay in ms
+int delayTime = 2000; // dalay in ms
 
 void setup()
 {
