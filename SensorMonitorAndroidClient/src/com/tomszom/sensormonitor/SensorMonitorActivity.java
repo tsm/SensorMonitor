@@ -304,7 +304,7 @@ public class SensorMonitorActivity extends ListActivity {
 			pairs.add(new BasicNameValuePair("client", clientName));
 		}
 		//String serverAddress = "192.12.8.100";
-		serverAddress+="/subscriptions";
+		serverAddress="http://"+serverAddress+"/SensorMonitor/subscriptions";
 		SensorMonitor app = (SensorMonitor) this.getApplication();
 		HttpClient client = app.getHttpClient();
 		HttpPost post = new HttpPost(serverAddress);
