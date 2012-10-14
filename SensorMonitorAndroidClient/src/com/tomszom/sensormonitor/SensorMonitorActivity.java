@@ -248,8 +248,17 @@ public class SensorMonitorActivity extends ListActivity {
           public void onItemClick(AdapterView<?> parent, View view,
               int position, long id) {
             Log.i(TAG, "Kliknieto "+position+" id:"+id);
+            List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+            SharedPreferences prefs = PreferenceManager
+    				.getDefaultSharedPreferences(getBaseContext()); 
+    																	
+    		String clientName = prefs
+    				.getString("client_option", "");
+    		if(!clientName.equals("")){
+    			pairs.add(new BasicNameValuePair("client", clientName));
+    		}
             if(measurementArrayList.get(position).isSubscribing()){
-            	List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+            	
 	            pairs.add(new BasicNameValuePair("action", "cancel"));
 	            pairs.add(new BasicNameValuePair("stock", measurementArrayList.get(position).getStock()));
 	            pairs.add(new BasicNameValuePair("metrics", measurementArrayList.get(position).getMeasurement()));
@@ -257,7 +266,6 @@ public class SensorMonitorActivity extends ListActivity {
 	            measurementArrayList.get(position).setSubscribing(false);
             }
             else{
-	            List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 	            pairs.add(new BasicNameValuePair("action", "subscribe"));
 	            pairs.add(new BasicNameValuePair("stock", measurementArrayList.get(position).getStock()));
 	            pairs.add(new BasicNameValuePair("metrics", measurementArrayList.get(position).getMeasurement()));
@@ -301,7 +309,7 @@ public class SensorMonitorActivity extends ListActivity {
 			return "";
 		}
 		else {
-			pairs.add(new BasicNameValuePair("client", clientName));
+			//pairs.add(new BasicNameValuePair("client", clientName));
 		}
 		//String serverAddress = "192.12.8.100";
 		serverAddress="http://"+serverAddress+"/SensorMonitor/subscriptions";
