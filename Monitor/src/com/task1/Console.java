@@ -13,8 +13,7 @@ public class Console extends JFrame {
 	JPanel jPanel = new JPanel();
 	JScrollPane jScrollPane = new JScrollPane();
 	JTextArea console = new JTextArea();
-	static int listen_port = 26123;
-	static int monitorsNum = 1;
+	static int[] listen_ports = { 26123 /* , 80 */};
 
 	/**
 	 * Konstruktor
@@ -28,7 +27,7 @@ public class Console extends JFrame {
 	 */
 	private void init() {
 		this.setTitle("Konsola");
-		this.setSize(800, 500);
+		this.setSize(600, 300);
 		console.setBorder(BorderFactory.createLoweredBevelBorder());
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,8 +41,8 @@ public class Console extends JFrame {
 		jPanel.add(jScrollPane);
 		this.getContentPane().add(jPanel, BorderLayout.WEST);
 
-		for (int i = 0; i < monitorsNum; i++) {
-			Monitor monitor = new Monitor(listen_port, this);
+		for (int i = 0; i < listen_ports.length; i++) {
+			Monitor monitor = new Monitor(listen_ports[i], this);
 			new Thread(monitor).start();
 		}
 	}

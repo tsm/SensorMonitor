@@ -6,9 +6,16 @@ import java.util.List;
 
 public class Metrics {
 
+	// Lista klientow
 	private List<SocketChannel> clients;
+
+	// Nazwa zasobu
 	private String name;
+
+	// Sensor przesylaj¹cy metryke
 	private SocketChannel sensor;
+
+	// Wartosc metryki
 	private String value;
 
 	public Metrics(String name, SocketChannel sensor, String value) {
