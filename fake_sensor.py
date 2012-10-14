@@ -1,13 +1,11 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
-import serial
 import socket
 import sys
 import random
 from time import sleep
 
 def com2socket(com_name, baudrate, host, port,name):
-    #com = serial.Serial(com_name,baudrate)
 
     sock = socket.socket()
     sock.connect((host,int(port)))
