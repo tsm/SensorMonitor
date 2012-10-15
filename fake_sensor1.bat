@@ -1,1 +1,1 @@
-python fake_sensor.py COM11 57600 127.0.0.1 26123 Fakeduino1
+python fake_sensor.py COM11 57600 192.12.8.100 26123 Fakeduino1

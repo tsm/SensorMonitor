@@ -124,7 +124,7 @@ public class SensorMonitorActivity extends ListActivity {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
 
-		final String serverAddress = prefs.getString(this.getResources()
+		String serverAddress = prefs.getString(this.getResources()
 				.getString(R.string.serverAddressOption), "");
 		if (serverAddress.equals("")) {
 			Log.d(TAG, "Empty address, launch Preferneces...");
@@ -133,7 +133,7 @@ public class SensorMonitorActivity extends ListActivity {
 			this.startActivityForResult(intent, 0);
 			return;
 		}
-		final String clientName = prefs.getString(this.getResources()
+		String clientName = prefs.getString(this.getResources()
 				.getString(R.string.clientOption), "");
 		if (clientName.equals("")) {
 			Log.d(TAG, "Empty client name, launch Preferneces...");
@@ -148,12 +148,18 @@ public class SensorMonitorActivity extends ListActivity {
 				public void run() {
 					Socket s;
 					Boolean end = false;
+					SharedPreferences prefs = PreferenceManager
+							.getDefaultSharedPreferences(getBaseContext());
+
+					String serverAddress = "192.12.8.100";
+					String clientName = "Tablet";
 					try {
 						s = new Socket(serverAddress, PORT);
 						// outgoing stream redirect to socket
 						OutputStream out = s.getOutputStream();
 						PrintWriter output = new PrintWriter(out);
 						output.println("CONNECT " + clientName);
+						Log.d(TAG, "serv "+serverAddress+" client "+clientName);
 						while (!end) {
 
 							BufferedReader input = new BufferedReader(
@@ -321,7 +327,7 @@ public class SensorMonitorActivity extends ListActivity {
 		}
 		// String serverAddress = "192.12.8.100";
 		serverAddress = "http://" + serverAddress
-				+ "/SensorMonitor/subscriptions";
+				+ "/Monitor/subscriptions";
 		SensorMonitor app = (SensorMonitor) this.getApplication();
 		HttpClient client = app.getHttpClient();
 		HttpPost post = new HttpPost(serverAddress);
