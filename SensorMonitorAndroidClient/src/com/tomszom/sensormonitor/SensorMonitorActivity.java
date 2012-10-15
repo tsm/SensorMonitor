@@ -6,8 +6,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +47,8 @@ import android.widget.TextView;
 
 public class SensorMonitorActivity extends ListActivity {
 	private final String TAG = getClass().getName();
+	static public String serverAddress;
+	static public String clientName;
 	private final int PORT = 26123;
 	private ListView lv;
 	private boolean openport = false;
@@ -124,7 +128,7 @@ public class SensorMonitorActivity extends ListActivity {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
 
-		String serverAddress = prefs.getString(this.getResources()
+		SensorMonitorActivity.serverAddress = prefs.getString(this.getResources()
 				.getString(R.string.serverAddressOption), "");
 		if (serverAddress.equals("")) {
 			Log.d(TAG, "Empty address, launch Preferneces...");
@@ -133,7 +137,7 @@ public class SensorMonitorActivity extends ListActivity {
 			this.startActivityForResult(intent, 0);
 			return;
 		}
-		String clientName = prefs.getString(this.getResources()
+		SensorMonitorActivity.clientName = prefs.getString(this.getResources()
 				.getString(R.string.clientOption), "");
 		if (clientName.equals("")) {
 			Log.d(TAG, "Empty client name, launch Preferneces...");
@@ -148,28 +152,33 @@ public class SensorMonitorActivity extends ListActivity {
 				public void run() {
 					Socket s;
 					Boolean end = false;
-					SharedPreferences prefs = PreferenceManager
-							.getDefaultSharedPreferences(getBaseContext());
-
-					String serverAddress = "192.12.8.100";
-					String clientName = "Tablet";
 					try {
-						s = new Socket(serverAddress, PORT);
+						Log.d(TAG, "serv "+SensorMonitorActivity.serverAddress+" client "+SensorMonitorActivity.clientName);	
+						s = new Socket(SensorMonitorActivity.serverAddress, PORT);
 						// outgoing stream redirect to socket
 						OutputStream out = s.getOutputStream();
+						//ByteBuffer writeBuffer = ByteBuffer.allocate(1024);
+						
 						PrintWriter output = new PrintWriter(out);
-						output.println("CONNECT " + clientName);
-						Log.d(TAG, "serv "+serverAddress+" client "+clientName);
-						while (!end) {
+						//PrintWriter output = new
+						//		 PrintWriter(s.getOutputStream(),true);
+						//		 //Autoflush
+						//String con="CONNECT " + clientName+"\r\n";
+//						writeBuffer.clear();	
+//						writeBuffer.put("connect Tablet\0x0D\0x0A".getBytes("ASCII"));
+//						writeBuffer.flip();
+//						out.write(writeBuffer.array());
 
-							BufferedReader input = new BufferedReader(
-									new InputStreamReader(s.getInputStream()));
-							// PrintWriter output = new
-							// PrintWriter(s.getOutputStream(),true);
-							// //Autoflush
-							String st = input.readLine();
+						
+						BufferedReader input = new BufferedReader(
+								new InputStreamReader(s.getInputStream()));
+						String st = input.readLine();
+						Log.d(TAG, "Received from monitor: " + st);												
+					    output.println("CONNECT " + SensorMonitorActivity.clientName+"\r\n");
+					    output.flush();
+						while (!end) {
+							st = input.readLine();
 							Log.d(TAG, "Received from monitor: " + st);
-							// tu jakieœ przetwarzanie danych
 							String[] splitted = st.split(";");
 							for (int i = 0; i < measurementArrayList.size(); i++) {
 								if (measurementArrayList.get(i).getStock()
@@ -202,6 +211,7 @@ public class SensorMonitorActivity extends ListActivity {
 					// }
 					// else message.arg1=2;
 					handler.sendMessage(message);
+					Log.d(TAG,"polaczenie zamkniete");
 					openport = false;
 				}
 			}).start();

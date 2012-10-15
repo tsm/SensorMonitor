@@ -14,3 +14,11 @@ gen/
 
 # Local configuration file (sdk path, etc)
 local.properties
+
+#serv
+
+Monitor2/.settings/
+Monitor2/bin/
+Monitor2/build/
+Monitor2/.classpath
+Monitor2/.project

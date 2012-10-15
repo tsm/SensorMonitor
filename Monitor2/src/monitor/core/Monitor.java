@@ -105,6 +105,14 @@ public class Monitor implements Runnable {
 						client.register(selector, client.validOps());
 						sendMsg(client.socket().getInetAddress()
 								+ " po³¹czony.");
+						writeBuffer.clear();	
+						writeBuffer.put("Po³¹czono\n".getBytes());
+						writeBuffer.flip();
+						client.write(writeBuffer);
+						writeBuffer.clear();	
+						writeBuffer.put("Po³¹czono\n".getBytes());
+						writeBuffer.flip();
+						client.write(writeBuffer);
 					} else if (key.isReadable()) {
 						client = (SocketChannel) key.channel();
 
@@ -144,6 +152,8 @@ public class Monitor implements Runnable {
 							String message = notificationList.get(client);
 							writeBuffer.clear();
 							if (message != null && !message.isEmpty()) {
+								message=message.replaceAll("-",";");
+								message+="\n";
 								writeBuffer.put(message.getBytes());
 								writeBuffer.flip();
 							}
@@ -178,8 +188,17 @@ public class Monitor implements Runnable {
 		if (splitted.length < 1) {
 			sendMsg("Nieprawidlowa skladnia zadania");
 			return;
-		}
+		}	
 		connectedClients.put(splitted[0].trim(), client);
+		writeBuffer.clear();	
+		writeBuffer.put("Dodano klienta".getBytes());
+		writeBuffer.flip();
+		try {
+			client.write(writeBuffer);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static Map<String, SocketChannel> getConnectedClients() {
