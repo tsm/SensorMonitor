@@ -62,12 +62,13 @@ public class SensorMonitorActivity extends ListActivity {
 				public void run() {
 					// pb.setVisibility(ProgressBar.INVISIBLE); //odœwie¿enie
 					// layoutu
+					
 					switch (msg.arg1) {
 					case 0:
 						openport = false;// finish();
 						break;
-					// case 1 :
-					// tvErr.setText(getResources().getString(R.string.error_connection));
+					case 1 :
+						refreshList();
 					}
 				}
 			});
@@ -157,18 +158,8 @@ public class SensorMonitorActivity extends ListActivity {
 						s = new Socket(SensorMonitorActivity.serverAddress, PORT);
 						// outgoing stream redirect to socket
 						OutputStream out = s.getOutputStream();
-						//ByteBuffer writeBuffer = ByteBuffer.allocate(1024);
 						
 						PrintWriter output = new PrintWriter(out);
-						//PrintWriter output = new
-						//		 PrintWriter(s.getOutputStream(),true);
-						//		 //Autoflush
-						//String con="CONNECT " + clientName+"\r\n";
-//						writeBuffer.clear();	
-//						writeBuffer.put("connect Tablet\0x0D\0x0A".getBytes("ASCII"));
-//						writeBuffer.flip();
-//						out.write(writeBuffer.array());
-
 						
 						BufferedReader input = new BufferedReader(
 								new InputStreamReader(s.getInputStream()));
@@ -188,12 +179,11 @@ public class SensorMonitorActivity extends ListActivity {
 												.equals(splitted[1])) {
 									measurementArrayList.get(i).setValue(
 											splitted[2]);
+									Message message = new Message();
+									message.arg1 = 1; // trzeba daæ znaæ, ¿e dane uleg³y zmianie
+									handler.sendMessage(message);
 								}
 							}
-							if (1 == 2) {
-								end = true;
-							} // STOPPING conditions
-
 						}
 						s.close();
 					} catch (UnknownHostException e) {
@@ -206,10 +196,7 @@ public class SensorMonitorActivity extends ListActivity {
 						end = true;
 					}
 					Message message = new Message();
-					// if(login.equals("test") && pass.equals("test")){
 					message.arg1 = 0;
-					// }
-					// else message.arg1=2;
 					handler.sendMessage(message);
 					Log.d(TAG,"polaczenie zamkniete");
 					openport = false;
@@ -249,18 +236,6 @@ public class SensorMonitorActivity extends ListActivity {
 	}
 
 	public void refreshList() {
-		measurementArrayList = new ArrayList<Measurement>();
-		List<NameValuePair> pair = new ArrayList<NameValuePair>();
-		String respond = sendPost(pair);
-
-		if (respond.equals(""))
-			return; // nic nie dosta³ nic nie robi
-		// parsowanie listy:
-		String[] splitted = respond.split(";");
-		for (int i = 0; i < splitted.length - 1; i += 2) {
-			measurementArrayList.add(new Measurement(splitted[i],
-					splitted[i + 1], ""));
-		}
 
 		setListAdapter(new MeasurementAdapter(this, R.layout.date_row,
 				measurementArrayList));
@@ -304,8 +279,22 @@ public class SensorMonitorActivity extends ListActivity {
 
 	public void get_measurements(View target) {
 		openPort(); // otwieram po³aczenie
-		if (openport)
-			refreshList(); // jesli po³aczony ¿adam listy subskrypcji
+		if (openport){
+			measurementArrayList = new ArrayList<Measurement>();
+			List<NameValuePair> pair = new ArrayList<NameValuePair>();
+			String respond = sendPost(pair);
+
+			if (respond.equals(""))
+				return; // nic nie dosta³ nic nie robi
+			// parsowanie listy:
+			String[] splitted = respond.split(";");
+			for (int i = 0; i < splitted.length - 1; i += 2) {
+				measurementArrayList.add(new Measurement(splitted[i],
+						splitted[i + 1], ""));
+			}
+		
+			refreshList();
+		}
 	}
 
 	public String sendPost(List<NameValuePair> pairs) {
